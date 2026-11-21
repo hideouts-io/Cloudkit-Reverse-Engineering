@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="580" viewBox="0 0 1080 580" role="img" aria-labelledby="title desc">
+  <title id="title">CloudKit Buddy comparison after Mac setup</title>
+  <desc id="desc">On November 19, 2026, a Mac that had already completed setup returned an acquisition-creator response for each of the two flag settings examined. The experiment stopped at that preliminary response. It acquired zero sessions and requested no CloudKit data. A separate review of installed software examined readiness checks. Behavior before setup and the authorization outcome of a full session remain unverified.</desc>
+  <rect width="1080" height="580" rx="20" fill="#101b2c"/>
+  <g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif">
+    <text x="44" y="56" fill="#f5f8fc" font-size="34" font-weight="700">How far did the Buddy comparison get?</text>
+    <text x="44" y="93" fill="#cbd8e5" font-size="19">After setup · November 19, 2026 · macOS 27.2 (26B123)</text>
+
+    <rect x="44" y="131" width="475" height="194" fill="#173541" stroke="#447782" rx="14"/>
+    <text x="68" y="172" font-size="21" font-weight="600" fill="#e1f8f4">Preliminary responses</text>
+    <text x="68" y="245" font-size="62" font-weight="700" fill="#72ddce">2 of 2</text>
+    <text x="68" y="292" font-size="19" fill="#e0e9f1">Both flag settings returned a creator response.</text>
+
+    <rect x="541" y="131" width="495" height="194" fill="#202c40" stroke="#52657c" rx="14"/>
+    <text x="565" y="172" font-size="21" font-weight="600" fill="#f5f8fc">Activity during the experiment</text>
+    <text x="565" y="230" font-size="36" font-weight="700" fill="#f5f8fc">0</text>
+    <text x="607" y="227" font-size="21" fill="#e0e9f1">sessions acquired</text>
+    <path d="M565 251 H1010" stroke="#4c5a70"/>
+    <text x="565" y="298" font-size="36" font-weight="700" fill="#f5f8fc">0</text>
+    <text x="607" y="295" font-size="21" fill="#e0e9f1">CloudKit data requests</text>
+
+    <text x="44" y="385" font-size="24" font-weight="700" fill="#f5f8fc">What a creator response establishes</text>
+    <text x="44" y="422" font-size="20" fill="#d5e1ea">It is the daemon’s initial response. The experiment stopped before asking for a session.</text>
+    <text x="44" y="475" font-size="20" fill="#d5e1ea">A separate review found readiness checks in the installed software. How a full session would</text>
+    <text x="44" y="504" font-size="20" fill="#d5e1ea">behave before setup, and what it could access, remain open questions.</text>
+    <text x="44" y="560" fill="#b6c7d7" font-size="16">Sources S16 and S18 · Retained experiment and separate installed-code review</text>
+  </g>
+</svg>

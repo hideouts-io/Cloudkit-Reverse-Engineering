@@ -1,0 +1,30 @@
+{
+  "checked_local_date": "2026-11-21",
+  "platform": "macOS",
+  "product_version": "27.2",
+  "build": "26B123",
+  "machine_architecture": "arm64",
+  "image_architecture": "arm64e",
+  "method": "Read product/build using sw_vers and architecture using uname -m; read installed image UUIDs using xcrun dyld_info -uuid.",
+  "images": [
+    {
+      "component": "CloudKit",
+      "path": "/System/Library/Frameworks/CloudKit.framework/Versions/A/CloudKit",
+      "uuid": "495BF823-A862-3CAC-B2DF-3A795DC1AA25",
+      "matches_retained_trace_uuid": true
+    },
+    {
+      "component": "CloudKitDaemon",
+      "path": "/System/Library/PrivateFrameworks/CloudKitDaemon.framework/Versions/A/CloudKitDaemon",
+      "uuid": "611D8286-D634-3F03-A4BE-DA96B7F6B749",
+      "matches_retained_trace_uuid": true
+    },
+    {
+      "component": "CloudCoreInternal",
+      "path": "/System/Library/PrivateFrameworks/CloudCoreInternal.framework/Versions/A/CloudCoreInternal",
+      "uuid": "FB9EA8B3-E415-34F2-8E40-B0CC36115EFF",
+      "matches_retained_trace_uuid": true
+    }
+  ],
+  "limits": "Matching image UUIDs and OS build are identity markers, not byte-for-byte verification, signature validation, proof the traced branches execute, a current configuration measurement, or a live session test."
+}

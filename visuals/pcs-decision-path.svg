@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="580" viewBox="0 0 1080 580" role="img" aria-labelledby="title desc">
+  <title id="title">Encryption-related options in three local CloudKit snapshots</title>
+  <desc id="desc">On one Mac, four cached association rows had bypassPCSEncryption set to true and one row had useClearAssetEncryption set to true on each date. The captures had 118 total association rows on November 13, 78 on November 18, and 96 on November 19, 2026. The dot plot shows each count as a percentage of the rows in its own snapshot. Stored or transmitted payload bytes were not measured.</desc>
+  <rect width="1080" height="580" rx="20" fill="#101b2c"/>
+  <g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif">
+    <text x="44" y="56" font-size="34" fill="#f5f8fc" font-weight="700">Encryption options in the local cache</text>
+    <text x="44" y="93" font-size="19" fill="#cbd8e5">One Mac · macOS 27.2 (26B123) · November 2026</text>
+
+    <circle cx="54" cy="141" r="7" fill="#72ddce"/>
+    <text x="72" y="148" font-size="19" fill="#e1f8f4">PCS bypass</text>
+    <path d="M237 133 l8 8 -8 8 -8 -8 z" fill="#f4bb79"/>
+    <text x="256" y="148" font-size="19" fill="#f8e5cc">Clear asset</text>
+
+    <g fill="#cbd8e5" font-size="16" font-weight="600">
+      <text x="44" y="214">Capture</text>
+      <text x="158" y="214">PCS bypass</text>
+      <text x="299" y="214">Clear asset</text>
+      <text x="496" y="214">Share of all association rows in each capture</text>
+    </g>
+    <path d="M44 232 H1036" stroke="#536777"/>
+    <g stroke="#364657" stroke-width="1">
+      <path d="M496 249 V414 M667 249 V414 M838 249 V414 M1009 249 V414"/>
+      <path d="M44 297 H1036 M44 357 H1036 M44 417 H1036"/>
+    </g>
+    <g font-size="21" fill="#f5f8fc">
+      <text x="44" y="276">Nov 13</text><text x="158" y="276">4 / 118</text><text x="299" y="276">1 / 118</text>
+      <text x="44" y="336">Nov 18</text><text x="158" y="336">4 / 78</text><text x="299" y="336">1 / 78</text>
+      <text x="44" y="396">Nov 19</text><text x="158" y="396">4 / 96</text><text x="299" y="396">1 / 96</text>
+    </g>
+    <g stroke="#607782" stroke-width="2">
+      <path d="M568.46 269 H785.83 M605.62 329 H934.46 M585.06 389 H852.25"/>
+    </g>
+    <g fill="#72ddce">
+      <circle cx="785.83" cy="269" r="8"/><circle cx="934.46" cy="329" r="8"/><circle cx="852.25" cy="389" r="8"/>
+    </g>
+    <g fill="#f4bb79">
+      <path d="M568.46 260 l9 9 -9 9 -9 -9 z M605.62 320 l9 9 -9 9 -9 -9 z M585.06 380 l9 9 -9 9 -9 -9 z"/>
+    </g>
+    <g fill="#cbd8e5" font-size="16" text-anchor="middle">
+      <text x="496" y="446">0%</text><text x="667" y="446">2%</text><text x="838" y="446">4%</text><text x="1009" y="446">6%</text>
+    </g>
+    <text x="44" y="498" fill="#f5f8fc" font-size="21" font-weight="600">The option counts held steady as the cache population changed.</text>
+    <text x="44" y="529" fill="#cbd8e5" font-size="18">The audit measured cached options. Protection of stored and transmitted payloads remains unknown.</text>
+    <text x="44" y="560" fill="#b6c7d7" font-size="16">Sources S11 and S26 · Read-only comparison of three retained backups</text>
+  </g>
+</svg>

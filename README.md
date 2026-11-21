@@ -1,20 +1,64 @@
 # CloudKit Reverse Engineering
 
-**An investigation of what CloudKit leaves behind, what its private configuration says, and where the evidence stops.** This project combines a local audit, historical cache comparisons, a fresh signed-out macOS reference installation, installed-code analysis, and a separate daemon-validation experiment. It retains specific names, counts, options, and contrary evidence so readers can examine the questions for themselves.
+This investigation follows CloudKit metadata on one Mac running macOS 27.2 build `26B123`. Three snapshots from November 13, 18, and 19, 2026 show how the cache changed. A fresh installation of the same build on a virtual machine (VM) provides a signed-out comparison. **Developer-related settings were enabled on the Mac. The retained evidence does not establish that a developer changed them or the user’s CloudKit account.**
 
-> **State of the evidence:** The principal observations were collected November 13–19, 2026 on macOS 27.2 build `26B123`. They are historical, build-specific observations—not a live assessment. The audit did not enumerate remote CloudKit records or establish compromise, an authorization bypass, or a vulnerability. Several findings are genuinely unexpected or warrant investigation; their prevalence across comparable installations is not established.
+## Two unusual entries in the local cache
+
+| Installation and checkpoint | Cached app identity rows | APNs value `serverPreferred` | VFS `open-by-id` set to Boolean true |
+| --- | ---: | ---: | ---: |
+| Original Mac · Nov 13 | 101 | 57 | 27 |
+| Original Mac · Nov 18 | 68 | 35 | 7 |
+| Original Mac · Nov 19 | 86 | 52 | 24 |
+| Reference VM · before skipping Apple Account sign-in | 10 | 3 | 0 |
+| Reference VM · after skipping sign-in | 10 | 3 | 0 |
+| Reference VM · first signed-out desktop | 42 | 23 | 0 |
+| Reference VM · after shutdown | 43 | 23 | 0 |
+
+Each cell counts rows in the same snapshot’s `AppBundle.entitlements` field. A service can have several logical identities, and one row can match both columns. The four guest checkpoints belong to one installation on the same physical Mac. Its account and feature history differed from the original’s. [S11, S12, S20, S26]
+
+**`serverPreferred` appeared before sign-in.** The cached key is `com.apple.developer.aps-environment`. On November 13, 77 of the 101 app rows had this key. The exact values were `serverPreferred` (57), `production` (14), `Production` (5), and `development` (1). The signature checks also found `serverPreferred` in Apple-signed `bird` and `voicebankingd`. In one Home service comparison, signed `homed` carried the value under the shorter `aps-environment` spelling. Apple documents development and production for push registration and explains how Xcode uses a provisioning profile. It gives no selection rule for `serverPreferred`, and the cache records no endpoint choice for an individual registration. [S11, S12, S20] [Apple’s macOS APNs entitlement](https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.developer.aps-environment)
+
+**The virtual filesystem (VFS) entitlement appeared only on the original installation.** Of the 27 original matches on November 13, 26 were logical `com.apple.bird` identities and one was `com.apple.CloudDocs.iCloudDriveFileProvider`. The later splits were 6 + 1 and 23 + 1. Both installed iCloud Drive executables passed strict signature verification against Apple’s signing anchor and carried `com.apple.private.vfs.open-by-id=true`. Apple’s published XNU source checks platform-binary status or this entitlement when opening a file by filesystem and object ID. That explains the capability. The audit has no event identifying a file opened this way, and the different cache populations leave the reason for the guest’s zero count open. The evidence supplies no link to a local CloudKit server or a choice of SQLite’s separately named VFS storage interface. [S21, S26] [Apple’s XNU source](https://github.com/apple-oss-distributions/xnu/blob/f6217f891ac0bb64f3d375211650a4c1ff8ca1ea/bsd/vfs/vfs_syscalls.c#L5437-L5492) · [SQLite’s VFS definition](https://www.sqlite.org/vfs.html)
+
+## Did someone with developer privileges change this system?
+
+**No reviewed artifact shows that a developer changed the observed CloudKit settings on the original Mac or its user’s CloudKit account.** A separate November 14 audit of the same startup volume group did record developer-related settings enabled on the Mac. The evidence for how each setting got there differs.
+
+| Evidence | What it establishes |
+| --- | --- |
+| Mac security policy · Nov 14 | Apple Mobile File Integrity (AMFI) reported `developer_mode_status=1` and `developer_mode_resolved=1`. The observed boot inputs matched a path in the inspected release firmware that selects the enabled state automatically, without a user setting. The audit could not verify that the running firmware was byte-identical to the inspected image. [S27] |
+| Developer tools authorization · Nov 14 | `DevToolsSecurity` separately reported **enabled** for Apple’s debugging and performance tools. The audit found no event showing when it was enabled, what set it, or who acted. This setting concerns local tools. [S27] |
+| Apple-shipped service configuration | `homeeventsd` and `businessservicesd` carried the iCloud-container value `Development` in the two earlier captures. The signature survey confirmed it on both Apple executables. Separately, signed `imagent` carried APNs `development` alongside iCloud-container `Production`. These values belong to the individual services. [S11, S20] |
+| Local environment labels | All server-info rows said `Production` on Nov 13, 18, and 19 (73/73, 54/54, 55/55). All push-token environment rows said `production` (97/97, 49/49, 70/70). These fields measure cached container configuration and push registration respectively. None records a switch of the user’s account environment. [S11, S26] |
+| App provisioning and cache population | A provisioning profile can determine an app’s signed APNs setting. A signed-out guest populated `serverPreferred` on its own setup path. Neither observation identifies a local provisioning change, its operator, or a manual cache edit. [S12, S20] |
+| The project’s own helper | On Nov 19 the researchers deliberately configured and ad hoc signed a local test helper. Its test stopped at acquisition-creator validation. This attributes the helper configuration to the experiment at project level. It supplies no evidence of an alteration to an Apple service binary or a CloudKit account. [S16] |
+| Remote administration | A team query lacked a management token and the audit had no developer access to the relevant remote resources. No reviewed deployment or account record identifies an action, affected resource, time, and responsible credential. The prior remote history therefore remains unknown. [S8] |
+
+A production schema deployment requires permission to edit the production environment. A deployment receipt or audit event naming the container, action, time, and team or credential would support a specific claim. Identifying an individual would additionally require evidence of who used that credential. [Apple’s schema deployment guide](https://developer.apple.com/documentation/cloudkit/deploying-an-icloud-container-s-schema) · [iCloud container environment](https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.developer.icloud-container-environment)
 
 ## The findings that deserve attention
 
 | Question | What was observed | What remains open |
 | --- | --- | --- |
 | Why is one private entitlement stored as text? | One `com.apple.security.kcsharing` identity row carried `com.apple.private.cloudkit.masquerade` as the string `"true"` in two earlier snapshots; the November 19 cache also had one string-valued row. A traced Apple compatibility path can create this representation. | The exact historical writer and branch have not been identified. A fresh signed-out reference had no matching identity row, so it cannot establish whether the type is normal for a populated shared-keychain identity. |
-| Why do encryption-related options say “bypass” and “clear”? | Two earlier caches each had four account-association rows with `bypassPCSEncryption=true` and one with `useClearAssetEncryption=true`. Installed-code analysis identified specific setter and consumer paths. | These fields concern specific paths and layers. The investigation did not measure the resulting stored content, wire bytes, or every protection, and did not establish unauthorized access or a TLS downgrade. |
-| Can a client ask for Buddy access without the private entitlement? | In a separate test, an unsandboxed ad hoc helper lacking `com.apple.private.cloudkit.buddyAccess` received a daemon acquisition creator with the new flag both false and true. | The test stopped before acquiring a session, ran after setup, and requested no iCloud data. It did not prove access during setup or a usable unauthorized session. |
+| Why do encryption-related options say “bypass” and “clear”? | The Nov 13, 18, and 19 caches each had four account-association rows with `bypassPCSEncryption=true` and one with `useClearAssetEncryption=true`, out of 118, 78, and 96 associations respectively. [S11, S26] | These fields concern specific paths and layers. The investigation did not measure the resulting stored content, wire bytes, or every protection, and did not establish unauthorized access or a TLS downgrade. |
+| What happened in the Buddy comparison? | After Mac setup, the local daemon returned a preliminary response in both test conditions. The research helper lacked the signed Buddy entitlement. | The experiment stopped at that response. It acquired zero sessions and requested no iCloud data. Access during setup remains untested. [S16] |
 | Why did local services report errors? | One five-minute audit window contained 11 account-info cache-write failures, 10 account-store connection/lookup errors, and 50 push-registration error messages in one 517-microsecond burst. | Causes and user-visible effects were not established. Fifty messages are not necessarily 50 network requests or retries. Later status responses reported CKKS and Octagon ready. |
 | Did the local cache change? | Across November 13, 18, and 19 snapshots, local metadata rows were 394, 254, and 312. Three November 16 database-open failures preceded a new database-family birth time. | These facts are consistent with a cache recreation episode; they do not identify its cause, writer, or an unauthorized edit. The counts are local snapshots, not remote records. |
 
-The table is a map of the investigation, not a verdict. The [evidence index](research/evidence-and-methods.md#source-index) identifies the retained source reports and distinguishes public references from private source material.
+### Other findings with measured counts
+
+| Observation on the original Mac | Nov 13 | Nov 18 | Nov 19 | What was counted |
+| --- | ---: | ---: | ---: | --- |
+| HTTP response-header capture preference | 31/118 | 6/78 | 23/96 | Association rows with the option set to true. The audit has no resulting header capture. |
+| Anonymous share-participant preference | 4/118 | 0/78 | 0/96 | Association rows with the option set to true. The cache alone cannot identify a recipient. |
+| Preference to hide the sharing-options interface | 3/118 | 3/78 | 3/96 | Association rows with the option set to true. An actual share or user-interface event was unobserved. |
+| `customAccounts` | 34 | 14 | — | Rows mentioning the named term. At signed-out guest desktop and shutdown, four rows each carried the Boolean entitlement. |
+| `DigitalHealth` | 3 | 1 | — | Rows mentioning the term. Each earlier subject capture and the signed-out guest at desktop and shutdown contained one exact service mapping for encrypted remote management. |
+
+The first three rows use the full association table at each date as their denominator. All five Nov 13 associations with an exceptional encryption option had these three preferences set to false. The last two rows use a separate eight-table search. A dash marks a capture outside that search. [S11, S12, S22, S26]
+
+On Nov 13, 21 of 118 associations lacked a matching push-token row and 12 lacked a matching server-info row. These are gaps in the local cache. The full inventory gives counts for Bluetooth pairing, EnergyKit, Home monitoring, the test push topic, FedStats, and unresolved app ownership. It also documents which early interpretations changed when checked against signed software or later guest measurements. [S20, S22, S23, S25] [Full findings inventory](research/anomaly-inventory.md) · [Evidence index](research/evidence-and-methods.md#source-index)
 
 ## What was actually measured
 
@@ -59,21 +103,19 @@ These are four observations of **one** guest installation and two observations o
 
 ## Encryption-related options: names, paths, and limits
 
-The earlier November 13 and November 18 subject snapshots each contained **four account-association rows with `bypassPCSEncryption=true`** and **one with `useClearAssetEncryption=true`**. These are actual option values in local metadata, and their names warrant scrutiny. They do not themselves describe every layer of protection or prove that a user’s data was exposed. [S11]
+The three snapshots each contained **four account-association rows with `bypassPCSEncryption=true`** and **one with `useClearAssetEncryption=true`**. These values are persisted options. Whether a service used one for a particular record or asset is a separate question. [S11, S26]
 
-The investigation went beyond the names:
+Build-specific analysis found that Apple software uses these options for particular operations. Published Apple Security source independently corroborates that its own services can request the PCS option. The local snapshots record configuration. No captured operation connects a row to the bytes of an asset in storage or in transit. The observations therefore leave the account’s effective protections unresolved. [S13, S14, S15]
 
-- On the installed build, static analysis found a CloudKit asset-repair constructor creating a generated `com.apple.cloudkit.metadata-%@` companion and setting `bypassPCSEncryption=true`. In the examined CloudKitDaemon path, a true bypass flag makes the `shouldUsePCSEncryption` decision return false. The trace is build-specific static evidence; it does not prove that this path executed for a particular historical row. [S13]
-- A separate installed-code trace identified a `ProtectedCloudKeySyncing` path requesting the PCS bypass option for `com.apple.security.PCSIdentityBackup`, and a `SyncedDefaultsDaemon` path requesting a clear-asset option for a statically named `NoEncryption` store type. These are specific construction paths, not proof that all CloudKit traffic or assets are unencrypted. [S14]
-- Apple's published Security source contains production code that explicitly sets the PCS bypass option in [TrustedPeersHelper](https://github.com/apple-oss-distributions/Security/blob/97c3a4296c1ea06b0fe1877a7e616aa84450b5b2/keychain/TrustedPeersHelper/TrustedPeersHelperSpecificUser.m#L103) and [OTManager](https://github.com/apple-oss-distributions/Security/blob/97c3a4296c1ea06b0fe1877a7e616aa84450b5b2/keychain/ot/OTManager.m#L3307). The inspected public source version is not identical to the installed build, and the setters do not establish every downstream protection. [S15]
-
-**Unanswered:** which concrete data, if any, traversed these paths in this account; what bytes and cryptographic protections applied at each layer; and why each option was selected. The research did not establish plaintext network traffic, disabled TLS or Advanced Data Protection, a successful unauthorized read, or compromise.
+![Four PCS-bypass rows and one clear-asset row in each of three snapshots, with 118, 78, and 96 associations respectively.](visuals/pcs-decision-path.svg)
 
 ## The Buddy-access test
 
-A separate November 19 experiment examined the newer `system.allowAccessDuringBuddy` configuration flag. An unsandboxed ad hoc helper had a synthetic ordinary application identifier and **no signed `com.apple.private.cloudkit.buddyAccess` entitlement**. The local daemon returned a nonnil session-acquisition **creator** and no error both with the flag set to `false` and with it set to `true`. The inspected configuration validator did not read that flag. [S16]
+“Buddy” refers to device setup. In a November 19 comparison after setup had finished, the local daemon returned an acquisition creator in both tested conditions. A creator is a preliminary response in session setup. The experiment stopped there, with zero sessions acquired and zero iCloud data requests. A separate inspection found further device-readiness checks. The audit could not link the observed responses to a completed authorization decision or establish what would happen before setup. [S16, S18]
 
-This is an observed front-door validation result, not a complete session test. The machine had already completed setup; the experiment stopped before session acquisition and made no CloudKit data request. Pre-setup device checks, first-unlock checks, legacy entitlement gating, container authorization, and sandbox restrictions were not established by this test. An earlier raw XPC error was a transport failure, not proof of a Buddy-flag denial. The unanswered question is whether a later gate denies the scenario under the conditions that matter.
+![After setup, both Buddy test conditions received a preliminary response. The comparison acquired zero sessions and requested no iCloud data.](visuals/buddy-readiness.svg)
+
+The supporting note gives the encryption counts, the Buddy comparison, and the November 21 check of three installed software images against the earlier traces. [Evidence note and build check](research/encryption-and-buddy.md)
 
 ## Errors, status, and cache history
 
@@ -88,7 +130,7 @@ Three database-open failures were logged on November 16 before a later database-
 
 ## What appeared even on a fresh signed-out system
 
-At the fresh guest desktop and after shutdown, **23 app rows** carried `aps-environment = serverPreferred`, **9** carried `buddyAccess = true`, and **4** carried `customAccounts = true`; one row mapped an encrypted remote-management identifier to `DigitalHealth`. The guest and original captures shared the same **12,617-byte** global policy payload, including **404 typed leaf values**. [S12]
+At the fresh guest desktop and after shutdown, **23 app rows** carried `com.apple.developer.aps-environment = serverPreferred`, **9** carried `buddyAccess = true`, and **4** carried `customAccounts = true`; one row mapped an encrypted remote-management identifier to `DigitalHealth`. The guest and original captures shared the same **12,617-byte** global policy payload, with **404 terminal entries** (401 scalar values and three empty containers). [S12]
 
 These names merit inspection, but the comparison is a useful counterweight: their presence in cached capability metadata on a signed-out installation does not itself establish an account, feature usage, recording, monitoring, or remote activity. Counts may overlap across categories and describe only the inspected snapshots.
 
@@ -112,7 +154,9 @@ Apple's [enterprise network reference](https://support.apple.com/en-us/101555) d
 
 ![Evidence boundary: local observations did not enumerate remote CloudKit resources.](visuals/coverage-boundary.svg)
 
+- [Full anomaly inventory and counting methods](research/anomaly-inventory.md)
 - [Detailed November 19 findings](research/findings.md)
+- [Encryption decisions and Buddy readiness](research/encryption-and-buddy.md)
 - [Evidence index, acquisition methods, and redaction](research/evidence-and-methods.md)
 - [Open questions and proposed research](research/open-questions.md)
 - [Chart data and definitions](visuals/data.md), including the [owner-mapping chart](visuals/owner-mapping.svg)

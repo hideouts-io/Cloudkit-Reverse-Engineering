@@ -6,7 +6,7 @@ The principal synthesis derives from a read-oriented local CloudKit audit collec
 
 ## Source index
 
-S1–S10 are relative to the retained comprehensive audit collection. S11–S17 identify separate research collections; the paths are relative to each named collection rather than the comprehensive audit.
+S1–S10 are relative to the retained comprehensive audit collection. S11–S18 identify separate private research collections; the paths are relative to each named collection rather than the comprehensive audit. S19 is a sanitized, public record included in this repository. S20–S26 cover the additional CloudKit reports and the count-only review of retained snapshots. S27 identifies the separate host developer-policy audit.
 
 | ID | Retained source | Role |
 | --- | --- | --- |
@@ -27,6 +27,16 @@ S1–S10 are relative to the retained comprehensive audit collection. S11–S17 
 | S15 | Encryption binary trace, `public-source-five-case-comparison.md` | Bounded comparison with pinned Apple-published Security source. |
 | S16 | Buddy validation, `FINDINGS.md` | Separate native daemon acquisition-creator validation experiment. |
 | S17 | November 18 follow-up, `03-runtime/step3-findings.md` and `04-history/step4-findings.md` | Earlier runtime window and cache history. |
+| S18 | Buddy installed-implementation trace, `FINDINGS.md` | Separate legacy, discretionary and Swift device-readiness control-flow analysis. |
+| S19 | [November 21 build and image-UUID check](evidence/build-identity-2026-11-21.json) | Public record of the new read-only build and image-identity check; matching UUIDs do not prove byte identity. |
+| S20 | November 13 named-values audit, `final-report-unredacted.md` and `signed-component-checks/` | Typed field counts and Apple-signed service comparisons. The later owner mapping supersedes its early securityd comparison. |
+| S21 | November 18 follow-up, `05-questions/vfs/vfs-findings.md` and `corrected-apple-anchor-check.json` in the same directory | VFS owner attribution, signing checks and kernel-source comparison. |
+| S22 | November 13 configuration audit, `findings-readable-unredacted.md`, `independent-options-interpretation-review.md`, `public-global-policy-context.md` | Association options, global policy, typed normalization and local cache relationship checks. |
+| S23 | November 13 installed-app comparison, `findings-readable-unredacted.md` | Cached container ownership and unmatched shared namespaces. |
+| S24 | November 13 inventory, `findings-readable-unredacted.md` | Scope of local database inventory, operational record cache and account-status observations. |
+| S25 | Comparative audit, reference-account follow-up release `REPORT.md` | Guest samples after reported sign-in and November 20 connectivity observations. Authentication and shared-group conditions remained unverified. |
+| S26 | Frozen original-Mac logical SQLite backups from the S11 earlier/later captures and S1 `02-local/logical-backup.sqlite`; S12 guest typed named-field counts | Read-only recount of app entitlements, association options, and environment labels in the three subject backups, plus the four guest checkpoints. See the [counting method](anomaly-inventory.md#how-the-counts-were-checked). |
+| S27 | November 14 host developer-policy audit, `investigation-report.md`, `current-read-only-state.json`, and `firmware-source.json` | AMFI state, boot-policy interpretation and separate developer-tools authorization. A private comparison against the S11 disk inventory matched the original startup volume-group identifier. The evidence links the installation across collections. It does not attest the live firmware image or identify a human operator. |
 
 The related official references are [Apple's CloudKit design guide](https://developer.apple.com/icloud/cloudkit/designing/), [Apple's enterprise network reference](https://support.apple.com/en-us/101555), and [Apple's cktool overview](https://developer.apple.com/icloud/ck-tool/). The local observations are not Apple statements, and the official documents do not independently confirm this host's state.
 
@@ -42,6 +52,6 @@ Two status diagnostics timed out, and selected socket-inspection commands return
 
 ## Publication and redaction
 
-Only carefully selected aggregate counts, technical interpretations, product names, and public documentation links are included here. The repository excludes raw logs and database rows, account and device identifiers, push tokens, credentials, private local paths, detailed event timestamps, and raw diagnostic artifacts. Counts retain useful denominators and context, but readers cannot use this release to inspect individual records or independently reconstruct the complete dataset. Distinctive combinations of build and aggregate event characteristics could still be correlated by someone who already holds the same logs. The local source collection remains separate and is not part of these files or their chart metadata.
+The public files retain measured counts, option names and types, product names, and links to documentation. The S19 record includes the build UUID and standard system path for each of three Apple software images. Those UUIDs identify compiled binaries shared by installations of that build. The repository excludes raw logs and database rows, account and device identifiers, push tokens, credentials, private local paths, detailed event timestamps, and raw diagnostic artifacts. Counts retain useful denominators and context, but readers cannot use this release to inspect individual records or independently reconstruct the complete dataset. Distinctive combinations of build and aggregate event characteristics could still be correlated by someone who already holds the same logs. The local source collection remains separate and is not part of these files or their chart metadata.
 
 The figures show independently scoped populations; they should not be added together. A configuration-field occurrence is not a network request, a log message is not necessarily a retry, and a cached identity is not necessarily a unique process or remote account.
