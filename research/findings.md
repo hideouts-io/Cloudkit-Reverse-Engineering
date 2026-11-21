@@ -36,7 +36,7 @@ In the 86 cached identity rows, the legacy `com.apple.private.cloudkit.masquerad
 
 Retained implementation evidence identified a shipped compatibility overlay that constructs a string-valued dictionary and passes its output through JSON serialization. This gives a concrete implementation path capable of explaining why the legacy key is represented as a string in a cache even when it is absent from a helper’s signed entitlement dictionary. It does **not** identify the historical writer, execution branch, or transaction for the specific cached row, and it does not establish that the representation is a default on independent installations. Earlier unresolved-serializer language was superseded by the newer producer trace. [S6]
 
-This is an example of why an unfamiliar representation alone is not proof of tampering: the representation, its producer, and the exact historical write are distinct questions. No independent, comparably exercised installation was available, so the denominator for independent recurrence is **zero**. [S6]
+This is an example of why an unfamiliar representation alone is not proof of tampering: the representation, its producer, and the exact historical write are distinct questions. A separately initialized, signed-out reference VM was observed, but its exact shared-keychain identity never appeared. No independent installation with a populated, comparably exercised identity was available, so the denominator for independent recurrence of that row is **zero**. [S6, S12]
 
 ## 4. Configuration is not traffic
 
@@ -73,7 +73,7 @@ Retained manifests matched **95/95**, **39/39**, and **707/707** files in three 
 
 1. **Unresolved ownership:** Can the 12 remaining base identifiers be mapped using independently verifiable ownership evidence, without treating a name alone as proof?
 2. **Historical attribution:** Is there an earlier, independently timed backup and suitable writer-correlated evidence that identifies when and how the unusual representation was written? Current implementation evidence does not answer that question.
-3. **Independent recurrence:** Does a separately initialized, comparably exercised installation of the same build show the same representation? A repeated snapshot of the original host is not an independent reference.
+3. **Independent recurrence:** Does a separately initialized, comparably exercised installation of the same build show the same representation? The signed-out reference VM had no matching identity row; a repeated snapshot of the original host is not an independent reference.
 4. **Operational impact:** Do the cache-write, account-store or push-registration messages correlate with a persistent, user-visible failure? A reproducible symptom and appropriately scoped diagnostics would be needed to connect them.
 5. **Remote state:** What exists in an authorized developer’s permitted CloudKit containers? No management token or developer access was available for this audit, so remote teams, schemas, zones, shares, records and metrics were not enumerated. An access failure is not evidence of absence.
 
