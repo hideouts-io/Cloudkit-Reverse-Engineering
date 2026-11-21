@@ -1,0 +1,12 @@
+# Open questions and next steps
+
+These questions follow from gaps in the November 2026 local audit. They are research proposals, not claims that the listed activity occurred or authorization to perform it.
+
+1. **Twelve owner mappings remain unresolved.** Can additional signed metadata, bundle relationships, or other authorized local evidence map those base identifiers to current owners? Preserve the distinction between an observed mapping and an assumption based on a similar name.
+2. **Historical cache writes remain unattributed.** A shipped compatibility overlay supplies a plausible producer for the string-valued legacy entry, but the available trace does not identify the historical writer or branch. A specifically scoped earlier capture or relevant execution trace would be needed for stronger attribution.
+3. **No independent comparable clean-install reference was available.** An independently initialized, comparable system or carefully scoped earlier backup could help distinguish system-wide behavior from same-host continuity. Match software build, setup state, and collection method before comparing, and record differences.
+4. **User-visible impact is unresolved.** If the user experiences a concrete synchronization issue, correlate a bounded, consented reproduction with status and diagnostics while protecting account content. A local error message alone cannot establish a persistent problem or compromise.
+5. **Remote resource state is unknown.** If the user later has appropriate team membership and authorization, Apple's developer tools may inspect the containers and operations that the assigned role permits. Such access would not create a universal inventory of other developers' containers. See [Apple's cktool overview](https://developer.apple.com/icloud/ck-tool/).
+6. **Network visibility is incomplete.** Selected socket commands returned partial or empty results, and configured endpoints alone do not establish actual connections, use of a specific route, or data residency. Any future traffic analysis needs its own explicit scope and privacy controls.
+
+The local audit did not demonstrate compromise, a CloudKit server running on the Mac, a usable unauthorized session, or remote record access. Additional research should keep those hypotheses separate from observed facts.

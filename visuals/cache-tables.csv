@@ -1,0 +1,9 @@
+table_name,local_rows,source
+AppContainerAccount,96,local audit consistent cache snapshot
+AppBundle,86,local audit consistent cache snapshot
+PushTokens,70,local audit consistent cache snapshot
+ContainerServerInfo,55,local audit consistent cache snapshot
+Properties,3,local audit consistent cache snapshot
+DSIDMap,1,local audit consistent cache snapshot
+ServerConfiguration,1,local audit consistent cache snapshot
+VerifiedPublicKey,0,local audit consistent cache snapshot

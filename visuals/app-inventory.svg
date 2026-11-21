@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 650" role="img" aria-labelledby="title desc">
+  <title id="title">Local app inventory: CloudKit and iCloud entitlement extraction</title>
+  <desc id="desc">On one Mac, an audit found 563 app bundles, extracted entitlements from 556, and identified 87 with a relevant CloudKit or iCloud entitlement among the successful extractions. Seven extractions failed. All bars use 563 discovered bundles as their scale. Extraction is not strict signature validation, and the result is not a count of remote containers or records.</desc>
+  <rect width="1100" height="650" rx="22" fill="#101b2c"/>
+  <text x="58" y="64" fill="#9cd9da" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700" letter-spacing="2">CLOUDKIT • LOCAL AUDIT</text>
+  <text x="58" y="116" fill="#f5f8fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="34" font-weight="700">What did the app inventory find?</text>
+  <text x="58" y="151" fill="#c0cedc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18">One Mac · audit reported November 19, 2026 · bars scaled to 563 bundles</text>
+  <g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" fill="#f5f8fc">
+    <text x="58" y="222" font-size="20" font-weight="600">Bundles discovered</text>
+    <text x="1040" y="222" text-anchor="end" font-size="24" font-weight="700">563</text>
+    <rect x="58" y="239" width="984" height="28" rx="6" fill="#a8b9ca"/>
+    <text x="58" y="317" font-size="20" font-weight="600">Entitlement extraction succeeded</text>
+    <text x="1040" y="317" text-anchor="end" font-size="24" font-weight="700">556</text>
+    <rect x="58" y="334" width="972" height="28" rx="6" fill="#4fbdc3"/>
+    <text x="58" y="412" font-size="20" font-weight="600">Relevant CloudKit / iCloud entitlements found</text>
+    <text x="1040" y="412" text-anchor="end" font-size="24" font-weight="700">87</text>
+    <rect x="58" y="429" width="152" height="28" rx="6" fill="#d2a5ff"/>
+    <text x="58" y="504" font-size="17" fill="#d7e3ed">87 of 556 successful extractions matched; 7 of 563 extractions failed.</text>
+    <text x="58" y="539" font-size="17" fill="#d7e3ed">An entitlement extraction is not a strict signature validation.</text>
+    <text x="58" y="574" font-size="17" fill="#d7e3ed">These are local app-bundle counts, not remote containers or records.</text>
+  </g>
+  <text x="58" y="623" fill="#aebfd0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14">Source: local audit report, executive summary · See app-inventory.csv for values</text>
+</svg>

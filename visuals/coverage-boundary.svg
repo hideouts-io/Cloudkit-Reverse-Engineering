@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 600" role="img" aria-labelledby="title desc">
+  <title id="title">Audit visibility boundary: local observations and remote unknowns</title>
+  <desc id="desc">Conceptual diagram showing that the audit observed a local metadata cache, selected app entitlements, local status reports and bounded logs on one Mac. It could not enumerate remote teams, schemas, zones, shares, records or metrics because management access was unavailable. The unknown remote state cannot be inferred from the local snapshot. This diagram shows the scope of evidence, not the complete CloudKit architecture.</desc>
+  <rect width="1100" height="600" rx="22" fill="#101b2c"/>
+  <text x="58" y="64" fill="#9cd9da" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700" letter-spacing="2">CLOUDKIT • SCOPE OF EVIDENCE</text>
+  <text x="58" y="116" fill="#f5f8fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="34" font-weight="700">What the audit could and could not see</text>
+  <text x="58" y="151" fill="#c0cedc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18">Conceptual coverage diagram · one host · November 2026</text>
+  <rect x="58" y="198" width="468" height="252" rx="14" fill="#193a45" stroke="#4fbdc3" stroke-width="2"/>
+  <rect x="574" y="198" width="468" height="252" rx="14" fill="#42352b" stroke="#efb96a" stroke-width="2"/>
+  <g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" fill="#f5f8fc">
+    <text x="84" y="241" font-size="23" font-weight="700">LOCAL EVIDENCE OBSERVED</text>
+    <text x="84" y="283" font-size="19">• Metadata cache snapshot</text>
+    <text x="84" y="321" font-size="19">• App entitlement extractions</text>
+    <text x="84" y="359" font-size="19">• Selected status reports</text>
+    <text x="84" y="397" font-size="19">• Bounded operational logs</text>
+    <text x="600" y="241" font-size="23" font-weight="700">REMOTE STATE NOT ENUMERATED</text>
+    <text x="600" y="283" font-size="19">• Teams and schemas</text>
+    <text x="600" y="321" font-size="19">• Zones and shares</text>
+    <text x="600" y="359" font-size="19">• Records and metrics</text>
+    <text x="600" y="408" font-size="17" fill="#f8e0bd">Management access was unavailable.</text>
+    <text x="58" y="505" fill="#d7e3ed" font-size="18">A local snapshot does not establish the complete or clean state of remote data.</text>
+    <text x="58" y="564" fill="#aebfd0" font-size="14">Source: local audit report, scope and remote-administration sections</text>
+  </g>
+</svg>

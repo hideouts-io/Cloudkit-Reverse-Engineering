@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 885" role="img" aria-labelledby="title desc">
+  <title id="title">Rows in the local CloudKit metadata cache by table</title>
+  <desc id="desc">The consistent metadata cache snapshot from one Mac has 312 rows across eight tables. AppContainerAccount has 96 rows, AppBundle 86, PushTokens 70, ContainerServerInfo 55, Properties 3, DSIDMap 1, ServerConfiguration 1, and VerifiedPublicKey 0. PushTokens is a table name; no token values are shown. These local database rows are not remote CloudKit record counts.</desc>
+  <rect width="1100" height="885" rx="22" fill="#101b2c"/>
+  <text x="58" y="64" fill="#9cd9da" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700" letter-spacing="2">CLOUDKIT • LOCAL CACHE</text>
+  <text x="58" y="116" fill="#f5f8fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="34" font-weight="700">Inside the metadata cache</text>
+  <text x="58" y="151" fill="#c0cedc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18">One Mac · consistent snapshot · 8 tables · 312 total local rows</text>
+  <g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif">
+    <text x="58" y="220" fill="#f5f8fc" font-size="18">AppContainerAccount</text>
+    <rect x="315" y="201" width="576" height="24" rx="4" fill="#24344a"/>
+    <rect x="315" y="201" width="576" height="24" rx="4" fill="#4fbdc3"/>
+    <text x="925" y="220" fill="#f5f8fc" font-size="20" font-weight="700">96</text>
+    <text x="58" y="283" fill="#f5f8fc" font-size="18">AppBundle</text>
+    <rect x="315" y="264" width="576" height="24" rx="4" fill="#24344a"/>
+    <rect x="315" y="264" width="516" height="24" rx="4" fill="#4fbdc3"/>
+    <text x="925" y="283" fill="#f5f8fc" font-size="20" font-weight="700">86</text>
+    <text x="58" y="346" fill="#f5f8fc" font-size="18">PushTokens</text>
+    <rect x="315" y="327" width="576" height="24" rx="4" fill="#24344a"/>
+    <rect x="315" y="327" width="420" height="24" rx="4" fill="#4fbdc3"/>
+    <text x="925" y="346" fill="#f5f8fc" font-size="20" font-weight="700">70</text>
+    <text x="58" y="409" fill="#f5f8fc" font-size="18">ContainerServerInfo</text>
+    <rect x="315" y="390" width="576" height="24" rx="4" fill="#24344a"/>
+    <rect x="315" y="390" width="330" height="24" rx="4" fill="#4fbdc3"/>
+    <text x="925" y="409" fill="#f5f8fc" font-size="20" font-weight="700">55</text>
+    <text x="58" y="472" fill="#f5f8fc" font-size="18">Properties</text>
+    <rect x="315" y="453" width="576" height="24" rx="4" fill="#24344a"/>
+    <rect x="315" y="453" width="18" height="24" rx="4" fill="#4fbdc3"/>
+    <text x="925" y="472" fill="#f5f8fc" font-size="20" font-weight="700">3</text>
+    <text x="58" y="535" fill="#f5f8fc" font-size="18">DSIDMap</text>
+    <rect x="315" y="516" width="576" height="24" rx="4" fill="#24344a"/>
+    <rect x="315" y="516" width="6" height="24" rx="4" fill="#4fbdc3"/>
+    <text x="925" y="535" fill="#f5f8fc" font-size="20" font-weight="700">1</text>
+    <text x="58" y="598" fill="#f5f8fc" font-size="18">ServerConfiguration</text>
+    <rect x="315" y="579" width="576" height="24" rx="4" fill="#24344a"/>
+    <rect x="315" y="579" width="6" height="24" rx="4" fill="#4fbdc3"/>
+    <text x="925" y="598" fill="#f5f8fc" font-size="20" font-weight="700">1</text>
+    <text x="58" y="661" fill="#f5f8fc" font-size="18">VerifiedPublicKey</text>
+    <rect x="315" y="642" width="576" height="24" rx="4" fill="#24344a"/>
+    <text x="925" y="661" fill="#f5f8fc" font-size="20" font-weight="700">0</text>
+    <text x="58" y="759" fill="#d7e3ed" font-size="17">PushTokens is a table name; no token values are shown.</text>
+    <text x="58" y="794" fill="#d7e3ed" font-size="17">Local table rows are not remote record or transfer counts.</text>
+    <text x="58" y="850" fill="#aebfd0" font-size="14">Source: local audit snapshot schema and counts · See cache-tables.csv for values</text>
+  </g>
+</svg>

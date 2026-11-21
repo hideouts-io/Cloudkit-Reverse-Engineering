@@ -1,0 +1,4 @@
+measure,count,denominator,denominator_description,source
+mapped to verified current owners,46,58,distinct cached application base identifiers,local audit report executive summary
+unresolved current owners,12,58,distinct cached application base identifiers,local audit report executive summary
+explicit signed application-identifier binding,45,46,mapped verified current owners,local audit report executive summary

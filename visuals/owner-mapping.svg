@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 590" role="img" aria-labelledby="title desc">
+  <title id="title">Local cached identity ownership mapping</title>
+  <desc id="desc">Of 58 distinct cached application base identifiers on one Mac, 46 were mapped to verified current owners and 12 remained unresolved. Forty-five of the 46 mappings had explicit signed application-identifier binding. The unresolved group does not establish malicious ownership. This is a local cache, not an inventory of remote containers or records.</desc>
+  <rect width="1100" height="590" rx="22" fill="#101b2c"/>
+  <text x="58" y="64" fill="#9cd9da" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700" letter-spacing="2">CLOUDKIT • LOCAL AUDIT</text>
+  <text x="58" y="116" fill="#f5f8fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="34" font-weight="700">Who owns the cached identities?</text>
+  <text x="58" y="151" fill="#c0cedc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18">One Mac · 58 distinct cached application base identifiers · November 19, 2026</text>
+  <rect x="58" y="200" width="780" height="78" rx="8" fill="#4fbdc3"/>
+  <rect x="838" y="200" width="204" height="78" rx="8" fill="#efb96a"/>
+  <text x="82" y="248" fill="#08232d" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="26" font-weight="700">46 mapped</text>
+  <text x="860" y="248" fill="#302008" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="24" font-weight="700">12 unresolved</text>
+  <g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif">
+    <circle cx="67" cy="327" r="8" fill="#4fbdc3"/>
+    <text x="88" y="333" fill="#f5f8fc" font-size="19">Mapped to verified current owners</text>
+    <circle cx="67" cy="369" r="8" fill="#efb96a"/>
+    <text x="88" y="375" fill="#f5f8fc" font-size="19">Ownership unresolved in this audit</text>
+    <text x="58" y="435" fill="#d7e3ed" font-size="17">45 of the 46 mappings also had explicit signed application-identifier binding.</text>
+    <text x="58" y="470" fill="#d7e3ed" font-size="17">Unresolved ownership does not establish malicious activity.</text>
+    <text x="58" y="505" fill="#d7e3ed" font-size="17">The cache is not a complete inventory of remote containers or records.</text>
+    <text x="58" y="560" fill="#aebfd0" font-size="14">Source: local audit report, executive summary · See owner-mapping.csv for values</text>
+  </g>
+</svg>

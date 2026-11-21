@@ -1,0 +1,5 @@
+measure,count,denominator,denominator_description,source
+app bundles discovered,563,563,discovered bundles,local audit report executive summary
+entitlement extraction succeeded,556,563,discovered bundles,local audit report executive summary
+relevant CloudKit or iCloud entitlement found,87,556,successful extractions,local audit report executive summary
+entitlement extraction failed,7,563,discovered bundles,local audit report executive summary
