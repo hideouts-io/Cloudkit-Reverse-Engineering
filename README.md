@@ -1,6 +1,60 @@
 # CloudKit Reverse Engineering
 
-This investigation follows CloudKit metadata on one Mac running macOS 27.2 build `26B123`. Three snapshots from November 13, 18, and 19, 2026 show how the cache changed. A fresh installation of the same build on a virtual machine (VM) provides a signed-out comparison. **On October 19, the Mac’s debugger authorization changed while the tester was preparing to retry a SandboxLens UI test. The [timeline](#october-19-devtoolssecurity-timeline) shows why a manual change is the best-supported explanation.**
+<a name="the-masquerade-string-suspicious-looking-is-not-the-same-as-explained"></a>
+
+## Shared-keychain `masquerade` was stored as text
+
+On November 13, 18, and 19, 2026, the ordinary `com.apple.securityd` identity and its shared-keychain variant had **19 identical entitlement values** in the local CloudKit cache on one Mac (macOS 27.2, build `26B123`). The shared-keychain variant had **one extra key**, `com.apple.private.cloudkit.masquerade`, with the JSON string `"true"`. In every snapshot, this was the only app identity row that stored this key as text. Every other row containing the key stored the Boolean `true`. [S1, S11, S26]
+
+| Original Mac | All cached app identity rows | Boolean `true` | Text `"true"` | Key absent |
+| --- | ---: | ---: | ---: | ---: |
+| Nov 13 | 101 | 67 | 1 | 33 |
+| Nov 18 | 68 | 41 | 1 | 26 |
+| Nov 19 | 86 | 59 | 1 | 26 |
+
+Both rows identify `com.apple.securityd` as the base application. The shared-keychain row also names `com.apple.security.kcsharing` for container access and push-topic generation. Those identity fields distinguish the two rows in `AppBundle`. The comparison below covers their decoded `entitlements` field. [S11, S26]
+
+### The 19 matching values
+
+Each value in this table was identical in both rows on all three dates. JSON notation preserves the types, including the one-item array and the one-entry service map. The fields whose names mention a device name or participant PII each contain a Boolean flag. [S11, S26]
+
+| Entitlement | Value on both identities in all three snapshots |
+| --- | --- |
+| `com.apple.application-identifier` | `"com.apple.securityd"` |
+| `com.apple.developer.aps-environment` | `"serverPreferred"` |
+| `com.apple.developer.device-information.user-assigned-device-name` | `true` |
+| `com.apple.developer.icloud-container-environment` | `"Production"` |
+| `com.apple.developer.icloud-services` | `["CloudKit"]` |
+| `com.apple.private.aps-connection-initiate` | `true` |
+| `com.apple.private.cloudkit.allowUnverifiedAccount` | `true` |
+| `com.apple.private.cloudkit.buddyAccess` | `true` |
+| `com.apple.private.cloudkit.customAccounts` | `true` |
+| `com.apple.private.cloudkit.notifyOnAccountWarmup` | `true` |
+| `com.apple.private.cloudkit.participant-pii` | `true` |
+| `com.apple.private.cloudkit.prefix` | `"com.apple.security."` |
+| `com.apple.private.cloudkit.serviceNameForContainerMap` | `{"com.apple.security.shared.keychain": "com.apple.security.keychain.shared"}` |
+| `com.apple.private.cloudkit.setEnvironment` | `true` |
+| `com.apple.private.cloudkit.spi` | `true` |
+| `com.apple.private.cloudkit.supportservice` | `true` |
+| `com.apple.private.cloudkit.systemService` | `true` |
+| `com.apple.private.dark-wake-push` | `true` |
+| `com.apple.private.network.socket-delegate` | `true` |
+
+| Additional entitlement | Ordinary identity, all three dates | Shared-keychain identity, all three dates |
+| --- | --- | --- |
+| `com.apple.private.cloudkit.masquerade` | Absent | `"true"` (JSON string) |
+
+A November 21 check found all 19 matching values among the signed entitlements of the installed `secd` executable on build `26B123`. Its signature lacked the extra key. On this build, Apple compatibility code can place `masquerade` in a dictionary whose values are all strings. Serializing that dictionary as JSON would preserve `"true"` as text. The retained records do not identify the code that wrote this particular row or show that it granted access to keychain data. [S4, S11, S26]
+
+### What appears in public sources
+
+Apple lists `com.apple.security.kcsharing` as a Mach service of `secd`. Its keychain test runner declares `com.apple.private.cloudkit.masquerade` as the plist Boolean `<true/>`. An independent iOS firmware comparison also shows the Boolean entitlement on `imagent`. [Apple’s service declaration](https://github.com/apple-oss-distributions/Security/blob/db15acbe6a7f257a859ad9a3bb86097bfe0679d9/OSX/sec/ipc/com.apple.secd.plist#L32-L37) · [Apple’s test-runner entitlements](https://github.com/apple-oss-distributions/Security/blob/db15acbe6a7f257a859ad9a3bb86097bfe0679d9/tests/TestHostBinaries/KeychainEntitledTestRunner.entitlements#L13-L14) · [Independent iOS firmware comparison](https://github.com/blacktop/ipsw-diffs/blob/86742adcbf2ba83474caa626120f11c8466a1d22/iOS/26_5_23F77_vs_26_6_23G5028e/Entitlements.md#L157-L169)
+
+A targeted web and GitHub code search on November 21 found **no independent public report of this exact macOS cache row** with the text `"true"` alongside the matching ordinary identity. The search covered publicly indexed material. How often this occurs on other Macs remains unknown.
+
+### The reference system changes the question
+
+The comparison VM was a fresh installation of the same build on the same physical Mac. Its four signed-out checkpoints contained 10, 10, 42, and 43 app identity rows. Of those, 5, 5, 22, and 23 respectively carried Boolean `true`. All four checkpoints had zero text matches **and zero exact shared-keychain identity rows**. Later checks also failed to verify a signed-in shared-group comparison. That leaves **zero independent installations with the populated row** against which to compare its value. [S12, S25] [Evidence index and collection limits](research/evidence-and-methods.md#source-index)
 
 ## Two unusual entries in the local cache
 
@@ -54,7 +108,6 @@ The local shell history contains a standalone `sudo` entry for the same enable c
 
 | Question | What was observed | What remains open |
 | --- | --- | --- |
-| Why is one private entitlement stored as text? | One `com.apple.security.kcsharing` identity row carried `com.apple.private.cloudkit.masquerade` as the string `"true"` in two earlier snapshots; the November 19 cache also had one string-valued row. A traced Apple compatibility path can create this representation. | The exact historical writer and branch have not been identified. A fresh signed-out reference had no matching identity row, so it cannot establish whether the type is normal for a populated shared-keychain identity. |
 | Why do encryption-related options say “bypass” and “clear”? | The Nov 13, 18, and 19 caches each had four account-association rows with `bypassPCSEncryption=true` and one with `useClearAssetEncryption=true`, out of 118, 78, and 96 associations respectively. [S11, S26] | These fields concern specific paths and layers. The investigation did not measure the resulting stored content, wire bytes, or every protection, and did not establish unauthorized access or a TLS downgrade. |
 | What happened in the Buddy comparison? | After Mac setup, the local daemon returned a preliminary response in both test conditions. The research helper lacked the signed Buddy entitlement. | The experiment stopped at that response. It acquired zero sessions and requested no iCloud data. Access during setup remains untested. [S16] |
 | Why did local services report errors? | One five-minute audit window contained 11 account-info cache-write failures, 10 account-store connection/lookup errors, and 50 push-registration error messages in one 517-microsecond burst. | Causes and user-visible effects were not established. Fifty messages are not necessarily 50 network requests or retries. Later status responses reported CKKS and Octagon ready. |
@@ -93,27 +146,6 @@ On November 19 the main audit examined one arm64 Mac using a consistent SQLite b
 These are observations from the original collection, not claims about today's machine or account. [S1, S4, S5, S8]
 
 ![Local app entitlement inventory: 563 bundles, 556 successful extractions, and 87 relevant matches.](visuals/app-inventory.svg)
-
-## The `masquerade` string: suspicious-looking is not the same as explained
-
-The name is striking. The underlying detail is more precise: the November 19 cache held **59 Boolean `true` values**, **one string `"true"`**, and **26 rows with the key absent** across 86 cached identity rows. Earlier captures of the same host had **67 / 1 / 33** and **41 / 1 / 26**, respectively. In those earlier captures, the string belonged to `com.apple.security.kcsharing`. [S1, S6, S11]
-
-The build-specific trace found a plausible Apple implementation route. Signed `secd` carries `com.apple.private.cloudcoreinternal.allow-custom-bundle-ids`; a CloudKit compatibility overlay can build a `[String: String]` dictionary containing the older `com.apple.private.cloudkit.masquerade` key, which JSON then preserves as text. This is substantive evidence against assuming that quotes alone prove a manual edit. It is not a record of the particular historical transaction. [S11]
-
-### The reference system changes the question
-
-A fresh installation of the **same build**, in a VM with a new identity and blank disk on the same physical Mac, was measured while signed out. Four checkpoints had 10, 10, 42, and 43 cached app rows; none had the exact `kcsharing` row or a string-valued `masquerade` entry. The original system had the row. The guest and original differed in account state and feature history, so this is a real comparison but **not a like-for-like test of the populated row**. [S12]
-
-| Capture | Cached app rows | Exact `kcsharing` row | String `"true"` rows | Boolean `true` rows |
-| --- | ---: | ---: | ---: | ---: |
-| Fresh signed-out guest, checkpoint 1 | 10 | 0 | 0 | 5 |
-| Fresh signed-out guest, checkpoint 2 | 10 | 0 | 0 | 5 |
-| Fresh signed-out guest, desktop | 42 | 0 | 0 | 22 |
-| Fresh signed-out guest, after shutdown | 43 | 0 | 0 | 23 |
-| Original Mac, earlier capture | 101 | 1 | 1 | 67 |
-| Original Mac, later capture | 68 | 1 | 1 | 41 |
-
-These are four observations of **one** guest installation and two observations of **one** original installation, not six independent devices. The number of independent comparable installations with a measured `kcsharing` row remains zero. The right follow-up is a separately authorized, comparable shared-keychain workload and a writer-correlated trace—not a claim that this representation is proven rare or malicious. [S11, S12]
 
 ## Encryption-related options: names, paths, and limits
 
