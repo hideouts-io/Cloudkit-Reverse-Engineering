@@ -1,6 +1,6 @@
 # CloudKit Reverse Engineering
 
-This investigation follows CloudKit metadata on one Mac running macOS 27.2 build `26B123`. Three snapshots from November 13, 18, and 19, 2026 show how the cache changed. A fresh installation of the same build on a virtual machine (VM) provides a signed-out comparison. **Developer-related settings were enabled on the Mac. The retained evidence does not establish that a developer changed them or the user’s CloudKit account.**
+This investigation follows CloudKit metadata on one Mac running macOS 27.2 build `26B123`. Three snapshots from November 13, 18, and 19, 2026 show how the cache changed. A fresh installation of the same build on a virtual machine (VM) provides a signed-out comparison. **On October 19, the Mac’s debugger authorization changed while the tester was preparing to retry a SandboxLens UI test. The [timeline](#october-19-devtoolssecurity-timeline) shows why a manual change is the best-supported explanation.**
 
 ## Two unusual entries in the local cache
 
@@ -27,7 +27,7 @@ Each cell counts rows in the same snapshot’s `AppBundle.entitlements` field. A
 | Evidence | What it establishes |
 | --- | --- |
 | Mac security policy · Nov 14 | Apple Mobile File Integrity (AMFI) reported `developer_mode_status=1` and `developer_mode_resolved=1`. The observed boot inputs matched a path in the inspected release firmware that selects the enabled state automatically, without a user setting. The audit could not verify that the running firmware was byte-identical to the inspected image. [S27] |
-| Developer tools authorization · Nov 14 | `DevToolsSecurity` separately reported **enabled** for Apple’s debugging and performance tools. The audit found no event showing when it was enabled, what set it, or who acted. This setting concerns local tools. [S27] |
+| Developer tools authorization · Oct 19 and Nov 14 | Direct `DevToolsSecurity` checks captured the change to **enabled** on Oct 19. The Nov 14 check also returned **enabled**. This authorization governs the extra password prompt for Apple-signed debugging and performance tools. [S27, S28, S29] |
 | Apple-shipped service configuration | `homeeventsd` and `businessservicesd` carried the iCloud-container value `Development` in the two earlier captures. The signature survey confirmed it on both Apple executables. Separately, signed `imagent` carried APNs `development` alongside iCloud-container `Production`. These values belong to the individual services. [S11, S20] |
 | Local environment labels | All server-info rows said `Production` on Nov 13, 18, and 19 (73/73, 54/54, 55/55). All push-token environment rows said `production` (97/97, 49/49, 70/70). These fields measure cached container configuration and push registration respectively. None records a switch of the user’s account environment. [S11, S26] |
 | App provisioning and cache population | A provisioning profile can determine an app’s signed APNs setting. A signed-out guest populated `serverPreferred` on its own setup path. Neither observation identifies a local provisioning change, its operator, or a manual cache edit. [S12, S20] |
@@ -35,6 +35,20 @@ Each cell counts rows in the same snapshot’s `AppBundle.entitlements` field. A
 | Remote administration | A team query lacked a management token and the audit had no developer access to the relevant remote resources. No reviewed deployment or account record identifies an action, affected resource, time, and responsible credential. The prior remote history therefore remains unknown. [S8] |
 
 A production schema deployment requires permission to edit the production environment. A deployment receipt or audit event naming the container, action, time, and team or credential would support a specific claim. Identifying an individual would additionally require evidence of who used that credential. [Apple’s schema deployment guide](https://developer.apple.com/documentation/cloudkit/deploying-an-icloud-container-s-schema) · [iCloud container environment](https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.developer.icloud-container-environment)
+
+### October 19 DevToolsSecurity timeline
+
+After a SandboxLens native UI test timed out, the tester chose to enable developer tools and retry. Two direct `DevToolsSecurity -status` results bracket the change within **43 seconds**. An independent macOS record places the modification of the debugger authorization rule, `system.privilege.taskport.debug`, inside that window. Times below are in Pacific daylight time on October 19, 2026. Clock times are shown to the minute and intervals to the nearest second. [S28, S29]
+
+| When | What the records show |
+| --- | --- |
+| 12:38 a.m. | The tester chose to enable developer tools for the SandboxLens retry. |
+| 12:39 a.m. | The tester asked how to enable the setting and received a Terminal instruction. |
+| About 30 seconds before the rule changed | The status command returned **disabled**. |
+| 12:40 a.m. | macOS recorded the debugger authorization rule as modified. |
+| About 13 seconds after the rule changed | The status command returned **enabled**. |
+
+The local shell history contains a standalone `sudo` entry for the same enable command that appeared in the instructions. The main history and seven saved histories preserve the same entry and the same neighboring lines. That entry has no timestamp or exit status. The test session’s recorded `DevToolsSecurity` calls checked status and displayed help. Together, these records support a deliberate Terminal change for SandboxLens testing. They do not identify who authenticated it. [S28, S29, S30]
 
 ## The findings that deserve attention
 

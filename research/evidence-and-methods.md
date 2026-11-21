@@ -6,7 +6,7 @@ The principal synthesis derives from a read-oriented local CloudKit audit collec
 
 ## Source index
 
-S1–S10 are relative to the retained comprehensive audit collection. S11–S18 identify separate private research collections; the paths are relative to each named collection rather than the comprehensive audit. S19 is a sanitized, public record included in this repository. S20–S26 cover the additional CloudKit reports and the count-only review of retained snapshots. S27 identifies the separate host developer-policy audit.
+S1–S10 are relative to the retained comprehensive audit collection. S11–S18 identify separate private research collections; the paths are relative to each named collection rather than the comprehensive audit. S19 is a sanitized, public record included in this repository. S20–S26 cover the additional CloudKit reports and the count-only review of retained snapshots. S27 identifies the November host developer-policy audit. S28–S30 identify the private records behind the [October 19 timeline](../README.md#october-19-devtoolssecurity-timeline).
 
 | ID | Retained source | Role |
 | --- | --- | --- |
@@ -37,6 +37,9 @@ S1–S10 are relative to the retained comprehensive audit collection. S11–S18 
 | S25 | Comparative audit, reference-account follow-up release `REPORT.md` | Guest samples after reported sign-in and November 20 connectivity observations. Authentication and shared-group conditions remained unverified. |
 | S26 | Frozen original-Mac logical SQLite backups from the S11 earlier/later captures and S1 `02-local/logical-backup.sqlite`; S12 guest typed named-field counts | Read-only recount of app entitlements, association options, and environment labels in the three subject backups, plus the four guest checkpoints. See the [counting method](anomaly-inventory.md#how-the-counts-were-checked). |
 | S27 | November 14 host developer-policy audit, `investigation-report.md`, `current-read-only-state.json`, and `firmware-source.json` | AMFI state, boot-policy interpretation and separate developer-tools authorization. A private comparison against the S11 disk inventory matched the original startup volume-group identifier. The evidence links the installation across collections. It does not attest the live firmware image or identify a human operator. |
+| S28 | October 19 SandboxLens native UI-test session | The retained session distinguishes the tester’s decision, the Terminal instruction, and the two status-command results. Elapsed time between the last disabled and first enabled result was about 43 seconds. |
+| S29 | macOS authorization database, debugger-right modification field | The read-only record for `system.privilege.taskport.debug` supplies a write time independent of the test session. The audit converted the stored time to Pacific daylight time before comparing it with the status results. This field does not identify the caller. |
+| S30 | Local shell history and seven saved session histories | The same enable command and surrounding entries appear in all eight copies. The retained line provides neither an execution time nor an exit status. |
 
 The related official references are [Apple's CloudKit design guide](https://developer.apple.com/icloud/cloudkit/designing/), [Apple's enterprise network reference](https://support.apple.com/en-us/101555), and [Apple's cktool overview](https://developer.apple.com/icloud/ck-tool/). The local observations are not Apple statements, and the official documents do not independently confirm this host's state.
 
